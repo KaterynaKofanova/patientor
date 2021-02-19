@@ -1,7 +1,7 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import {Patient} from '../types';
+import {DiagnoseEntry, Patient} from '../types';
 import { apiBaseUrl } from "../constants";
 import { useStateValue } from "../state";
 import {setPatientInfo} from '../state/reducer';
@@ -9,7 +9,7 @@ import {Icon} from 'semantic-ui-react';
 
 const PatientInfo: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const [{patientInfo}, dispatch ] = useStateValue();
+    const [{patientInfo, diagnoses}, dispatch ] = useStateValue();
     React.useEffect(()=>{
         const fetchPatientInfo = async ()=> {
             try {
@@ -25,6 +25,9 @@ const PatientInfo: React.FC = () => {
             fetchPatientInfo();
         }
     },[id, patientInfo, dispatch]);
+    const matchDiagnoses = (code: string, diagnoses: DiagnoseEntry[]): string | undefined => {
+       return diagnoses.find(dc => dc.code === code) ? diagnoses.find(dc => dc.code === code)?.name : '';
+    };
     if(patientInfo){
         const iconName = patientInfo.gender === 'female' ? 'venus'
             : patientInfo.gender === 'male' ? 'mars'
@@ -35,7 +38,7 @@ const PatientInfo: React.FC = () => {
             <p>ssn: {patientInfo.ssn}</p>
             <p>occupation: {patientInfo.occupation}</p>
             <h4>entries</h4>
-            {patientInfo.entries ? patientInfo.entries.map(e => <div key={e.description}><p>{e.date} {e.description}</p><ul>{e.diagnosisCodes?.map(dc => <li key={dc}>{dc}</li>)}</ul></div>) : null}
+            {patientInfo.entries ? patientInfo.entries.map(e => <div key={e.description}><p>{e.date} {e.description}</p><ul>{e.diagnosisCodes?.map(dc => <li key={dc}>{dc} {matchDiagnoses(dc, diagnoses) }</li>)}</ul></div>) : null }
         </div>
     );}
     return (
