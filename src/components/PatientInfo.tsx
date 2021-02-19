@@ -34,6 +34,8 @@ const PatientInfo: React.FC = () => {
             <h1>{patientInfo.name}<Icon name={iconName}/></h1>
             <p>ssn: {patientInfo.ssn}</p>
             <p>occupation: {patientInfo.occupation}</p>
+            <h4>entries</h4>
+            {patientInfo.entries ? patientInfo.entries.map(e => <div key={e.description}><p>{e.date} {e.description}</p><ul>{e.diagnosisCodes?.map(dc => <li key={dc}>{dc}</li>)}</ul></div>) : null}
         </div>
     );}
     return (
