@@ -6,6 +6,7 @@ import { apiBaseUrl } from "../constants";
 import { useStateValue } from "../state";
 import {setPatientInfo} from '../state/reducer';
 import {Icon} from 'semantic-ui-react';
+import PatientEntry from './PatientEntry';
 
 const PatientInfo: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -38,7 +39,7 @@ const PatientInfo: React.FC = () => {
             <p>ssn: {patientInfo.ssn}</p>
             <p>occupation: {patientInfo.occupation}</p>
             <h4>entries</h4>
-            {patientInfo.entries ? patientInfo.entries.map(e => <div key={e.description}><p>{e.date} {e.description}</p><ul>{e.diagnosisCodes?.map(dc => <li key={dc}>{dc} {matchDiagnoses(dc, diagnoses) }</li>)}</ul></div>) : null }
+            {patientInfo.entries ? patientInfo.entries.map(e => <div key={e.id}><PatientEntry entry={e} /><ul>{e.diagnosisCodes?.map(dc => <li key={dc}>{dc} {matchDiagnoses(dc, diagnoses) }</li>)}</ul></div>) : null }
         </div>
     );}
     return (
